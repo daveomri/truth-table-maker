@@ -15,6 +15,7 @@ class formulaClass():
         self.hili = 0
         self.trueTable = list()
         self.outpoleOrigin = list()
+        self.seedoftree = str()
         self.helpList = list()
         self.workingList = []
         self.dictList = dict()
@@ -25,17 +26,62 @@ class formulaClass():
         #self.structureForm()
     def formulaControl(self):
         cerberos=0
-        self.structureForm()
-        for item in self.outpoleOrigin:
-            if item[0] == self.hili:
-                cerberos+=1
+        penny=0
+        numberofform=0
+        saver=set()
+        nomis=0
+        alert=0
+        decide=0
+        for item in self.formula:
+            if item == "(" or item == ")":
+                decide+=1
             else:
-                pass
-        if cerberos==1:
+                decide+=2
+        if decide == len(self.formula):
+            decide=1
+        else:
+            decide = self.structureForm()
+        if decide == 0:
             self.printTree()
+        print(self.outpoleOrigin)
+        countalert=0
+        #print(self.outpoleOrigin)
+        for character in self.seedoftree:
+            if character == '.' or character =='\\n' or character ==' ':
+                countme=0
+            else:
+                countme+=1
+            if countme==2:
+                countalert=1
+        if countalert!=1:
+            for item in self.outpoleOrigin:
+                if item[0]==nomis:
+                    alert=1
+                if item[1] not in self.logicConstructors:
+                    numberofform+=1
+                else:
+                    saver.add(item[1])
+                if item[0] == self.hili:
+                    if item[1] in self.logicConstructors:
+                        penny=2
+                    cerberos+=1
+                else:
+                    pass
+                nomis=item[0]
+        if len(saver)==1 and numberofform>1 and 'n' in saver or alert==1 or countalert==1:
+            print(self.outpoleOrigin,"Wrong input")
+        elif cerberos==1 and decide == 0 and (penny==2 or len(self.formula)==3 or self.formula[1]=='n' or numberofform==1):
+            #try:
+            self.boardMaker()
+            #except:
+            #    print(self.outpoleOrigin,"Wrong input")
+            #    print("Wrong input")
         else:
             print("NaLF")
     def printMe(self):
+        #print("i should not be there")
+        print("Tree Structure")
+        print(self.seedoftree)
         print("Truth Table")
         for item in range(0, self.countStates):print(self.outValues[item],"\t", end="")
         print(self.formula.rstrip(), end="\n")
@@ -115,10 +161,11 @@ class formulaClass():
     def structureForm(self):
         self.width = os.get_terminal_size().columns
         self.colum=0
+        columcheck=0
         self.outpole=[]
         for i in range(len(self.formula)):
-            if self.formula[i] == "(":self.colum+=1
-            elif self.formula[i] == ")":self.colum-=1
+            if self.formula[i] == "(":self.colum+=1;columcheck+=1
+            elif self.formula[i] == ")":self.colum-=1;columcheck-=1
             elif self.formula[i]=="n" and self.formula[i+1]=="(":
                 self.colum+=1
                 self.outpole.append([self.colum,self.formula[i]])       # For tree construction
@@ -130,13 +177,16 @@ class formulaClass():
                 self.outpoleOrigin.append([self.colum,self.formula[i]])
                 if self.formula[i-1] == "n":self.colum-=1
             if self.formula[i] == "n"and self.formula[i+1]!="(":self.colum+=1
-        self.emptyId = 1
-        self.level = self.outpole[0][0]
-        for number in self.outpole:
-            if number[0] < self.level:self.level=number[0]
-        self.hili = int(self.level)
+        if columcheck!=0:
+            return 1
+        else:
+            self.emptyId = 1
+            self.level = self.outpole[0][0]
+            for number in self.outpole:
+                if number[0] < self.level:self.level=number[0]
+            self.hili = int(self.level)
+            return 0
     def printTree(self):
-        print("Tree Structure".center(self.width))
         while self.emptyId != 0:
             self.line = ""
             self.emptyId = 0
@@ -152,8 +202,6 @@ class formulaClass():
                 else:pass
             if self.emptyId != 0:
                 self.level+=1
-                print(self.line.center(self.width),end="\n")
-        print("\n")
-        self.boardMaker()
+                self.seedoftree+=self.line.center(self.width)+"\n"
 for line in sys.stdin:
     formulaClass(line)
